@@ -29,12 +29,11 @@ require_relative './lib/weapon.rb'
 class Window < Gosu::Window
   def initialize
     super(640, 480, false)
-    @hero = Hero.new
-    @hero.set_position(self.width/2, self.height/2, 0)
-    @skeleton = Ennemy.new('skeleton.png')
-    @skeleton.set_position(100, 100, 0)
-    @skeleton2 = Ennemy.new('skeleton.png')
-    @skeleton2.set_position(400, 400, 0)
+    @hero = Hero.new.set_position(self.width/2, self.height/2, 0)
+    @ennemies = [
+      Ennemy.new('skeleton.png').set_position(100, 100, 0),
+      Ennemy.new('skeleton.png').set_position(400, 400, 0)
+    ]
   end 
 
   def button_down(id)
@@ -46,11 +45,13 @@ class Window < Gosu::Window
   def needs_cursor?; true; end
 
   def update
-    [@hero, @skeleton, @skeleton2].each {|entity| entity.update}
+    @hero.update(@ennemies)
+    @ennemies.each {|ennemy| ennemy.set_velocity(0.25); ennemy.update(@hero)}
   end
 
   def draw
-    [@hero, @skeleton, @skeleton2].each {|entity| entity.draw}
+    @hero.draw
+    @ennemies.each {|ennemy| ennemy.draw}
   end
 end
 
