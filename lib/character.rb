@@ -5,16 +5,20 @@ class Character
   @@frame_loop_order = [1, 2, 1, 0]
   @@frame_default = 0
   @@frame_duration = 200
-  # variables to handle frames
+  # variables to handle frames - TODO : add proper diagonal indexes
   @@directions = {
     north: 0,
     east: 1,
     south: 2,
-    west: 3
+    west: 3,
+    north_east: 0,
+    north_west: 0,
+    south_east: 2,
+    south_west: 2
   }
   @@direction_default = :north
   @@velocity = 1.5
-  @@run_multiplier = 2
+  @@run_multiplier = 1.5
 
   attr_reader :position
   def initialize(spritesheet)
@@ -59,39 +63,51 @@ class Character
       @position.x += velocity
     when :west
       @position.x -= velocity
+    when :north_west
+      @position.x -= velocity
+      @position.y -= velocity
+    when :north_east
+      @position.x += velocity
+      @position.y -= velocity
+    when :south_west
+      @position.x -= velocity
+      @position.y += velocity
+    when :south_east
+      @position.x += velocity
+      @position.y += velocity
     end
     @moving = true
   end
 
-  def move_up
+  def move_north
     move(:north)
   end
 
-  def move_down
+  def move_south
     move(:south)
   end
 
-  def move_up_left
-    move(:up_left)
+  def move_north_west
+    move(:north_west)
   end
 
-  def move_up_right
-    move(:up_right)
+  def move_north_east
+    move(:north_east)
   end
 
-  def move_down_left
-    move(:down_left)
+  def move_south_west
+    move(:south_west)
   end
 
-  def move_down_right
-    move(:down_right)
+  def move_south_east
+    move(:south_east)
   end
 
-  def move_left
+  def move_west
     move(:west)
   end
   
-  def move_right
+  def move_east
     move(:east)
   end
 

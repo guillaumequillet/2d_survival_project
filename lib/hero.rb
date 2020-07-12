@@ -54,10 +54,23 @@ class Hero < Character
     set_running(Gosu::button_down?(@@keys[:run]))
 
     # movement
-    move_right if Gosu::button_down?(@@keys[:right])
-    move_left  if Gosu::button_down?(@@keys[:left])
-    move_up    if Gosu::button_down?(@@keys[:up])
-    move_down  if Gosu::button_down?(@@keys[:down])
+    if [:up, :right].all? {|key| Gosu::button_down?(@@keys[key])}
+      move(:north_east)
+    elsif [:up, :left].all? {|key| Gosu::button_down?(@@keys[key])}
+      move(:north_west)
+    elsif [:down, :left].all? {|key| Gosu::button_down?(@@keys[key])}
+      move(:south_west)
+    elsif [:down, :right].all? {|key| Gosu::button_down?(@@keys[key])}
+      move(:south_east)
+    elsif Gosu::button_down?(@@keys[:up])
+      move(:north) 
+    elsif Gosu::button_down?(@@keys[:down])
+      move(:south) 
+    elsif Gosu::button_down?(@@keys[:left])
+      move(:west) 
+    elsif Gosu::button_down?(@@keys[:right])
+      move(:east) 
+    end
 
     # if the player triggers aiming and some ennemy is present
     if Gosu::button_down?(@@keys[:aim]) && !ennemies.empty?
