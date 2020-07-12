@@ -51,6 +51,7 @@ class Window < Gosu::Window
   end
 
   def draw
+    Gosu::draw_rect(0, 0, self.width, self.height, Gosu::Color.new(255, 128, 128, 128))
     @hero.draw
     @ennemies.each {|ennemy| ennemy.draw}
   end

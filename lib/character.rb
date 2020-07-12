@@ -21,12 +21,12 @@ class Character
   @@run_multiplier = 1.8
 
   attr_reader :position
-  def initialize(spritesheet)
+  def initialize(spritesheet, sprite_width = nil, sprite_height = nil)
     @position = Position.new
     @velocity = @@velocity
     @running = false
     @inventory = Inventory.new
-    @frames = Gosu::Image.load_tiles("./gfx/spritesheets/#{spritesheet}", @@sprite_width, @@sprite_height, retro: true) 
+    @frames = Gosu::Image.load_tiles("./gfx/spritesheets/#{spritesheet}", sprite_width.nil? ? @@sprite_width : sprite_width, sprite_height.nil? ? @@sprite_height : sprite_height, retro: true) 
     @direction = @@direction_default
     @frame = @@frame_default
   end

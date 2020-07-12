@@ -36,7 +36,8 @@ class Hero < Character
   }
 
   def initialize
-    super('hero1.png')
+    super('jill.png', 32, 32)
+    @aiming_sprites = Gosu::Image.load_tiles('gfx/spritesheets/jill_aiming.png', 32, 32, retro: true)
     @inventory.add_item(Weapon.new('pistol', 40))
   end
 
@@ -112,18 +113,23 @@ class Hero < Character
       end
 
       current_frame_index = @@directions[faced_direction] * @@frame_count + @@frame_loop_order[@frame] 
+      sprites = @aiming_sprites
     else
       # otherwise, we'll set the direction to the walking direction
       current_frame_index = @@directions[@direction] * @@frame_count + @@frame_loop_order[@frame]    
+      sprites = @frames
     end
 
-    @frames[current_frame_index].draw_rot(@position.x, @position.y, @position.z + @position.y, 0, 0.5, 1, scale, scale)
+    sprites[current_frame_index].draw_rot(@position.x, @position.y, @position.z + @position.y, 0, 0.5, 1, scale, scale)
 
     if @targeting
       @font ||= Gosu::Font.new(24)
       @font.draw_text('targeting | angle : ' + angle.round(0).to_s, @position.x, @position.y + @font.height, 1)
       unless @target.nil?
-        Gosu::draw_line(@position.x, @position.y - 48, Gosu::Color::RED, @target.position.x, @target.position.y - 48, Gosu::Color::RED)
+        src = Position.new(@position.x, @position.y - 48, @position.z)
+        src.x += 36 if faced_direction == :east
+        src.x -= 36 if faced_direction == :west
+        Gosu::draw_line(src.x, src.y, Gosu::Color::RED, @target.position.x, @target.position.y - 48, Gosu::Color::RED)
       end
     end
   end
