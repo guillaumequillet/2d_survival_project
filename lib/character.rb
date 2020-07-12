@@ -5,23 +5,25 @@ class Character
   @@frame_loop_order = [1, 2, 1, 0]
   @@frame_default = 0
   @@frame_duration = 200
+  # variables to handle frames
+  @@directions = {
+    north: 0,
+    east: 1,
+    south: 2,
+    west: 3
+  }
+  @@direction_default = :north
   @@velocity = 1.5
+  @@run_multiplier = 2
 
   attr_reader :position
   def initialize(spritesheet)
     @position = Position.new
     @velocity = @@velocity
+    @running = false
     @inventory = Inventory.new
-    @frames = Gosu::Image.load_tiles("./gfx/spritesheets/#{spritesheet}", @@sprite_width, @@sprite_height, retro: true)
-    
-    # variables to handle frames
-    @directions = {
-      north: 0,
-      east: 1,
-      south: 2,
-      west: 3
-    }
-    @direction = :north
+    @frames = Gosu::Image.load_tiles("./gfx/spritesheets/#{spritesheet}", @@sprite_width, @@sprite_height, retro: true) 
+    @direction = @@direction_default
     @frame = @@frame_default
   end
 
@@ -35,6 +37,11 @@ class Character
     return self
   end
 
+  def set_running(running)
+    @running = running
+    return self
+  end
+
   def set_direction(direction)
     @direction = direction
     return self
@@ -42,15 +49,16 @@ class Character
 
   def move(direction)
     set_direction(direction)
+    velocity = @running ? @@run_multiplier * @velocity : @velocity 
     case @direction
     when :north
-      @position.y -= @velocity
+      @position.y -= velocity
     when :south
-      @position.y += @velocity
+      @position.y += velocity
     when :east
-      @position.x += @velocity
+      @position.x += velocity
     when :west
-      @position.x -= @velocity
+      @position.x -= velocity
     end
     @moving = true
   end
@@ -87,7 +95,7 @@ class Character
 
   def draw
     scale = 4
-    current_frame_index = @directions[@direction] * @@frame_count + @@frame_loop_order[@frame]
+    current_frame_index = @@directions[@direction] * @@frame_count + @@frame_loop_order[@frame]
     @frames[current_frame_index].draw_rot(@position.x, @position.y, @position.z + @position.y, 0, 0.5, 1, scale, scale)
   end
 end

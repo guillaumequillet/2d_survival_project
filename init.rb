@@ -32,7 +32,8 @@ class Window < Gosu::Window
     @hero = Hero.new.set_position(self.width/2, self.height/2, 0)
     @ennemies = [
       Ennemy.new('skeleton.png').set_position(100, 100, 0),
-      Ennemy.new('skeleton.png').set_position(400, 400, 0)
+      Ennemy.new('skeleton.png').set_position(400, 400, 0),
+      Ennemy.new('skeleton.png').set_position(50, 350, 0)
     ]
   end 
 
