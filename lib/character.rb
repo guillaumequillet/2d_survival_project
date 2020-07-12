@@ -18,7 +18,7 @@ class Character
   }
   @@direction_default = :north
   @@velocity = 1.5
-  @@run_multiplier = 1.5
+  @@run_multiplier = 1.8
 
   attr_reader :position
   def initialize(spritesheet)
@@ -64,17 +64,17 @@ class Character
     when :west
       @position.x -= velocity
     when :north_west
-      @position.x -= velocity
-      @position.y -= velocity
+      @position.x -= velocity * 0.7
+      @position.y -= velocity * 0.7
     when :north_east
-      @position.x += velocity
-      @position.y -= velocity
+      @position.x += velocity * 0.7
+      @position.y -= velocity * 0.7
     when :south_west
-      @position.x -= velocity
-      @position.y += velocity
+      @position.x -= velocity * 0.7
+      @position.y += velocity * 0.7
     when :south_east
-      @position.x += velocity
-      @position.y += velocity
+      @position.x += velocity * 0.7
+      @position.y += velocity * 0.7
     end
     @moving = true
   end
