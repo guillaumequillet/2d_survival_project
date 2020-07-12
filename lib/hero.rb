@@ -95,11 +95,33 @@ class Hero < Character
   end
 
   def draw
-    super()
+    scale = 4
+
+    unless (@target.nil?)
+      # we want to adjust the direction to face the target, if any
+      angle = Gosu::angle(@position.x, @position.y, @target.position.x, @target.position.y)
+
+      if angle >= 45 && angle < 135
+        faced_direction = :east
+      elsif angle >= 135 && angle < 225
+        faced_direction = :south
+      elsif angle >= 225 && angle < 315
+        faced_direction = :west
+      elsif angle >= 315 || angle < 45
+        faced_direction = :north
+      end
+
+      current_frame_index = @@directions[faced_direction] * @@frame_count + @@frame_loop_order[@frame] 
+    else
+      # otherwise, we'll set the direction to the walking direction
+      current_frame_index = @@directions[@direction] * @@frame_count + @@frame_loop_order[@frame]    
+    end
+
+    @frames[current_frame_index].draw_rot(@position.x, @position.y, @position.z + @position.y, 0, 0.5, 1, scale, scale)
 
     if @targeting
       @font ||= Gosu::Font.new(24)
-      @font.draw_text('targeting', @position.x, @position.y + @font.height, 1)
+      @font.draw_text('targeting | angle : ' + angle.round(0).to_s, @position.x, @position.y + @font.height, 1)
       unless @target.nil?
         Gosu::draw_line(@position.x, @position.y - 48, Gosu::Color::RED, @target.position.x, @target.position.y - 48, Gosu::Color::RED)
       end

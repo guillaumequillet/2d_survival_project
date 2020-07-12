@@ -127,7 +127,7 @@ class Character
 
   def draw
     scale = 4
-    current_frame_index = @@directions[@direction] * @@frame_count + @@frame_loop_order[@frame]
+    current_frame_index = @@directions[@direction] * @@frame_count + @@frame_loop_order[@frame]    
     @frames[current_frame_index].draw_rot(@position.x, @position.y, @position.z + @position.y, 0, 0.5, 1, scale, scale)
   end
 end
