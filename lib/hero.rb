@@ -11,15 +11,28 @@ class Hero < Character
   }
 
   # temp controller hack
+  # PS1 keys
+  # 0 => cross
+  # 1 => circle
+  # 2 => square
+  # 3 => triangle
+  # 4 => select
+  # 6 => start
+  # 7 => L3
+  # 8 => R3
+  # 9 => L1
+  # 10 => R1
+  # 11 => L2
+  # 12 => R2
   @@keys = {
-    up:      Gosu::GP_UP,
-    down:    Gosu::GP_DOWN,
-    left:    Gosu::GP_LEFT,
-    right:   Gosu::GP_RIGHT,
-    aim:     287,
-    switch:  286,
-    shoot:   277,
-    run:     279
+    up:      Gosu::GP_0_UP,
+    down:    Gosu::GP_0_DOWN,
+    left:    Gosu::GP_0_LEFT,
+    right:   Gosu::GP_0_RIGHT,
+    aim:     Gosu::GP_0_BUTTON_10,
+    switch:  Gosu::GP_0_BUTTON_9,
+    shoot:   Gosu::GP_0_BUTTON_0,
+    run:     Gosu::GP_0_BUTTON_2
   }
 
   def initialize

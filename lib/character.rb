@@ -71,6 +71,22 @@ class Character
     move(:south)
   end
 
+  def move_up_left
+    move(:up_left)
+  end
+
+  def move_up_right
+    move(:up_right)
+  end
+
+  def move_down_left
+    move(:down_left)
+  end
+
+  def move_down_right
+    move(:down_right)
+  end
+
   def move_left
     move(:west)
   end
