@@ -40,18 +40,17 @@ class Window < Gosu::Window
   def button_down(id)
     super
     close! if id == Gosu::KB_ESCAPE
+    @hero.button_down(id)
   end
 
   def needs_cursor?; true; end
 
   def update
-
+    [@hero, @skeleton, @skeleton2].each {|entity| entity.update}
   end
 
   def draw
-    @hero.draw
-    @skeleton.draw
-    @skeleton2.draw
+    [@hero, @skeleton, @skeleton2].each {|entity| entity.draw}
   end
 end
 

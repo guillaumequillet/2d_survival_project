@@ -1,9 +1,11 @@
 class Character
   @@sprite_width = 24
   @@sprite_height = 32
+  @@velocity = 4
 
   def initialize(spritesheet)
     @position = Position.new
+    @velocity = @@velocity
     @inventory = Inventory.new
     @frames = Gosu::Image.load_tiles("./gfx/spritesheets/#{spritesheet}", @@sprite_width, @@sprite_height, retro: true)
     
@@ -21,6 +23,30 @@ class Character
 
   def set_position(x = 0, y = 0, z = 0)
     @position.x, @position.y, @position.z = x, y, z
+  end
+
+  def set_velocity(velocity)
+    @velocity = velocity
+  end
+
+  def move_up
+    @position.y -= @velocity
+  end
+
+  def move_down
+    @position.y += @velocity
+  end
+
+  def move_left
+    @position.x -= @velocity
+  end
+  
+  def move_right
+    @position.x += @velocity
+  end
+
+  def update
+  
   end
 
   def draw
