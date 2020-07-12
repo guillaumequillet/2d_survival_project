@@ -1,7 +1,11 @@
 class Character
   @@sprite_width = 24
   @@sprite_height = 32
-  @@velocity = 1
+  @@frame_count = 3
+  @@frame_loop_order = [1, 2, 1, 0]
+  @@frame_default = 0
+  @@frame_duration = 200
+  @@velocity = 1.5
 
   attr_reader :position
   def initialize(spritesheet)
@@ -18,8 +22,7 @@ class Character
       west: 3
     }
     @direction = :north
-    @frame = 0
-    @frame_count = 1
+    @frame = @@frame_default
   end
 
   def set_position(x = 0, y = 0, z = 0)
@@ -49,6 +52,7 @@ class Character
     when :west
       @position.x -= @velocity
     end
+    @moving = true
   end
 
   def move_up
@@ -68,12 +72,22 @@ class Character
   end
 
   def update
-    
+    if @moving
+      if Gosu::milliseconds - @frame_tick >= @@frame_duration
+        @frame += 1
+        @frame = 0 if @frame >= @@frame_loop_order.size
+        @frame_tick = Gosu::milliseconds
+      end
+      @moving = false
+    else
+      @frame_tick = Gosu::milliseconds
+      @frame = @@frame_default
+    end
   end
 
   def draw
     scale = 4
-    current_frame_index = @directions[@direction] * @frame_count + @frame
+    current_frame_index = @directions[@direction] * @@frame_count + @@frame_loop_order[@frame]
     @frames[current_frame_index].draw_rot(@position.x, @position.y, @position.z + @position.y, 0, 0.5, 1, scale, scale)
   end
 end

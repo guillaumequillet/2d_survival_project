@@ -19,16 +19,20 @@ class Hero < Character
     move_up    if Gosu::button_down?(Gosu::KB_UP)
     move_down  if Gosu::button_down?(Gosu::KB_DOWN)
 
-    # target
-    if Gosu::button_down?(Gosu::KB_SPACE)
+    # if the player triggers aiming and some ennemy is present
+    if Gosu::button_down?(Gosu::KB_SPACE) && !ennemies.empty?
+      # we set the targeting action to true
       @targeting = true
+      # if no target, we take the closest ennemy from hero
       if @target.nil?
         @target = ennemies.sort {|a, b| a.distance_from_hero <=> b.distance_from_hero}.first
+      # if we are switching target, we take the NEXT closest ennemy
       elsif @target_switching
         sorted_array = ennemies.sort {|a, b| a.distance_from_hero <=> b.distance_from_hero}
         current_ennemy_index = sorted_array.index(@target)
         new_target_index = current_ennemy_index >= sorted_array.size - 1 ? 0 : current_ennemy_index + 1
         @target = sorted_array[new_target_index]
+        # switching is a single button press operation
         @target_switching = false
       end
     else 
