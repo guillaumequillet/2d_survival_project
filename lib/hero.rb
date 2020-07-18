@@ -58,6 +58,7 @@ class Hero < Character
     # if the player is still and triggers aiming while some ennemy is present
     if @map_target.nil? && Gosu::button_down?(@@keys[:aim]) && !ennemies.empty?
       # we set the targeting action to true
+      stop_movement
       @targeting = true
       # if no target, we take the closest ennemy from hero
       if @target.nil?
