@@ -11,15 +11,11 @@ class Character
     north: 0,
     east: 1,
     south: 2,
-    west: 3,
-    north_east: 0,
-    north_west: 0,
-    south_east: 2,
-    south_west: 2
+    west: 3
   }
   @@direction_default = :north
   @@velocity = 1
-  @@run_multiplier = 2
+  @@run_multiplier = 1.5
 
   attr_reader :position, :map_position, :map_target
   def initialize(spritesheet, sprite_width = nil, sprite_height = nil)
@@ -84,22 +80,6 @@ class Character
 
   def move_south
     move(:south)
-  end
-
-  def move_north_west
-    move(:north_west)
-  end
-
-  def move_north_east
-    move(:north_east)
-  end
-
-  def move_south_west
-    move(:south_west)
-  end
-
-  def move_south_east
-    move(:south_east)
   end
 
   def move_west

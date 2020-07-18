@@ -113,6 +113,7 @@ class Hero < Character
     end
     
     current_frame_index = @@directions[@direction] * @@frame_count + @@frame_loop_order[@frame] 
+    current_frame_index = @@directions[@direction] if @targeting
     sprites = @targeting ? @aiming_sprites : @frames   
     sprites[current_frame_index].draw_rot(@position.x, @position.y, @position.z + @position.y, 0, 0.5, 1)
 

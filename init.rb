@@ -30,7 +30,7 @@ class Window < Gosu::Window
   def initialize
     super(640, 480, false)
     @scale = 4
-    @hero = Hero.new.set_map_position(10, 8).set_velocity(0.6)
+    @hero = Hero.new.set_map_position(0, 0).set_velocity(0.6)
     @ennemies = []
     5.times do
       x = (rand * 20).floor
