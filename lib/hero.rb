@@ -55,8 +55,8 @@ class Hero < Character
   def update(ennemies)
     super()
 
-    # if the player triggers aiming and some ennemy is present
-    if Gosu::button_down?(@@keys[:aim]) && !ennemies.empty?
+    # if the player is still and triggers aiming while some ennemy is present
+    if @map_target.nil? && Gosu::button_down?(@@keys[:aim]) && !ennemies.empty?
       # we set the targeting action to true
       @targeting = true
       # if no target, we take the closest ennemy from hero
