@@ -38,6 +38,7 @@ class Hero < Character
   def initialize
     super('jill.png', 32, 32)
     @aiming_sprites = Gosu::Image.load_tiles('gfx/spritesheets/jill_aiming.png', 32, 32, retro: true)
+    @aiming_arms = Gosu::Image.load_tiles('gfx/spritesheets/jill_arms.png', 32, 32, retro: true)
     @inventory.add_item(Weapon.new('pistol', 40))
   end
 
@@ -101,14 +102,22 @@ class Hero < Character
       # we want to adjust the direction to face the target, if any
       angle = Gosu::angle(@position.x, @position.y, @target.position.x, @target.position.y)
 
-      if angle >= 45 && angle < 135
-        @direction = :east
-      elsif angle >= 135 && angle < 225
-        @direction = :south
-      elsif angle >= 225 && angle < 315
+      # 4 angles aiming
+      # if angle >= 45 && angle < 135
+      #   @direction = :east
+      # elsif angle >= 135 && angle < 225
+      #   @direction = :south
+      # elsif angle >= 225 && angle < 315
+      #   @direction = :west
+      # elsif angle >= 315 || angle < 45
+      #   @direction = :north
+      # end
+
+      # 2 angles aiming
+      if angle >= 180
         @direction = :west
-      elsif angle >= 315 || angle < 45
-        @direction = :north
+      else
+        @direction = :east
       end
     end
     
@@ -121,10 +130,18 @@ class Hero < Character
       @font ||= Gosu::Font.new(12)
       @font.draw_text('targeting | angle : ' + angle.round(0).to_s, @position.x, @position.y + @font.height, 1)
       unless @target.nil?
-        src = Position.new(@position.x, @position.y - 12, @position.z)
-        src.x += 8 if @direction == :east
-        src.x -= 8 if @direction == :west
-        Gosu::draw_line(src.x, src.y, Gosu::Color::RED, @target.position.x, @target.position.y - 16, Gosu::Color::RED)
+        Gosu::draw_line(position.x, position.y - 12, Gosu::Color::RED, @target.position.x, @target.position.y - 12, Gosu::Color::RED)
+        attribs = case @direction
+        when :north
+          [@position.x, @position.y - 13, @position.z + @position.y - 1, angle]
+        when :south
+          [@position.x, @position.y - 11, @position.z + @position.y, angle + 180]
+        when :west
+          [@position.x, @position.y - 10, @position.z + @position.y, angle + 90]
+        when :east
+          [@position.x, @position.y - 10, @position.z + @position.y, angle - 90]
+        end
+        @aiming_arms[@@directions[@direction]].draw_rot(attribs[0], attribs[1], attribs[2], attribs[3], 0.5, 0.5)
       end
     end
   end

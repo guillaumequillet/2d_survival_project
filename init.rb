@@ -30,11 +30,11 @@ class Window < Gosu::Window
   def initialize
     super(640, 480, false)
     @scale = 4
-    @hero = Hero.new.set_map_position(0, 0).set_velocity(0.6)
+    @hero = Hero.new.set_map_position(3, 1).set_velocity(0.6)
     @ennemies = []
     5.times do
-      x = (rand * 20).floor
-      y = (rand * 15).floor
+      x = (rand * 10).floor + 3
+      y = (rand * 5).floor + 2
       @ennemies.push Ennemy.new('skeleton.png').set_map_position(x, y)
     end
   end 
