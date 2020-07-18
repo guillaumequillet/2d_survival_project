@@ -1,4 +1,5 @@
 class Character
+  @@tile_size = 16
   @@sprite_width = 24
   @@sprite_height = 32
   @@frame_count = 3
@@ -20,15 +21,23 @@ class Character
   @@velocity = 1.5
   @@run_multiplier = 1.8
 
-  attr_reader :position
+  attr_reader :position, :map_position, :map_target
   def initialize(spritesheet, sprite_width = nil, sprite_height = nil)
     @position = Position.new
+    @map_position = Position.new
+    @map_target = nil
     @velocity = @@velocity
     @running = false
     @inventory = Inventory.new
     @frames = Gosu::Image.load_tiles("./gfx/spritesheets/#{spritesheet}", sprite_width.nil? ? @@sprite_width : sprite_width, sprite_height.nil? ? @@sprite_height : sprite_height, retro: true) 
     @direction = @@direction_default
     @frame = @@frame_default
+    @frame_tick = Gosu::milliseconds
+  end
+
+  def set_map_position(x, y)
+    @map_position.x, @map_position.y = x, y
+    set_position((@map_position.x + 0.5) * @@tile_size, (@map_position.y + 0.5) * @@tile_size, 0)
   end
 
   def set_position(x = 0, y = 0, z = 0)
@@ -52,31 +61,21 @@ class Character
   end
 
   def move(direction)
-    set_direction(direction)
-    velocity = @running ? @@run_multiplier * @velocity : @velocity 
-    case @direction
-    when :north
-      @position.y -= velocity
-    when :south
-      @position.y += velocity
-    when :east
-      @position.x += velocity
-    when :west
-      @position.x -= velocity
-    when :north_west
-      @position.x -= velocity * 0.7
-      @position.y -= velocity * 0.7
-    when :north_east
-      @position.x += velocity * 0.7
-      @position.y -= velocity * 0.7
-    when :south_west
-      @position.x -= velocity * 0.7
-      @position.y += velocity * 0.7
-    when :south_east
-      @position.x += velocity * 0.7
-      @position.y += velocity * 0.7
+    # we can only move if previous target was reached (aka == nil)
+    if @map_target.nil?
+      set_direction(direction)
+      @map_target = Position.new(@map_position.x, @map_position.y, 0)
+      case direction
+      when :north
+        @map_target.y -= 1
+      when :south
+        @map_target.y += 1
+      when :east
+        @map_target.x += 1
+      when :west
+        @map_target.x -= 1
+      end
     end
-    @moving = true
   end
 
   def move_north
@@ -112,13 +111,45 @@ class Character
   end
 
   def update
+    velocity = @running ? @@run_multiplier * @velocity : @velocity 
+
+    unless @map_target.nil?
+      target_x = (@map_target.x + 0.5) * @@tile_size
+      target_y = (@map_target.y + 0.5) * @@tile_size
+
+      if @position.x < target_x
+        @position.x += velocity
+        @position.x = target_x if @position.x > target_x
+      elsif @position.x > target_x
+        @position.x -= velocity
+        @position.x = target_x if @position.x < target_x
+      elsif @position.y < target_y
+        @position.y += velocity
+        @position.y = target_y if @position.y > target_y
+      elsif @position.y > target_y
+        @position.y -= velocity
+        @position.y = target_y if @position.y < target_y
+      end
+  
+      # if we reached the target
+      if @position.x == target_x && @position.y == target_y
+        # we adjust the map position according to pixel position
+        @map_position.x = (@position.x / @@tile_size.to_f).floor
+        @map_position.y = (@position.y / @@tile_size.to_f).floor
+        @moving = false
+        @map_target = nil
+      # if we didn't reach the target
+      else
+        @moving = true
+      end
+    end
+
     if @moving
-      if Gosu::milliseconds - @frame_tick >= @@frame_duration
+      if Gosu::milliseconds - @frame_tick >= @@frame_duration / (@running ? @@run_multiplier : 1)
         @frame += 1
         @frame = 0 if @frame >= @@frame_loop_order.size
         @frame_tick = Gosu::milliseconds
       end
-      @moving = false
     else
       @frame_tick = Gosu::milliseconds
       @frame = @@frame_default

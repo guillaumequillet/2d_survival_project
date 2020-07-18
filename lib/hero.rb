@@ -48,6 +48,10 @@ class Hero < Character
     end
   end
 
+  def button_up(id)
+    
+  end
+
   def update(ennemies)
     super()
 
@@ -77,15 +81,7 @@ class Hero < Character
       set_running(Gosu::button_down?(@@keys[:run]))
 
       # movement
-      if [:up, :right].all? {|key| Gosu::button_down?(@@keys[key])}
-        move(:north_east)
-      elsif [:up, :left].all? {|key| Gosu::button_down?(@@keys[key])}
-        move(:north_west)
-      elsif [:down, :left].all? {|key| Gosu::button_down?(@@keys[key])}
-        move(:south_west)
-      elsif [:down, :right].all? {|key| Gosu::button_down?(@@keys[key])}
-        move(:south_east)
-      elsif Gosu::button_down?(@@keys[:up])
+      if Gosu::button_down?(@@keys[:up])
         move(:north) 
       elsif Gosu::button_down?(@@keys[:down])
         move(:south) 

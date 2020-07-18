@@ -29,13 +29,14 @@ require_relative './lib/weapon.rb'
 class Window < Gosu::Window
   def initialize
     super(640, 480, false)
-    @scale = 3
-    @hero = Hero.new.set_position((self.width / 2) / @scale, (self.height / 2) / @scale, 0)
-    @ennemies = [
-      Ennemy.new('skeleton.png').set_position(100, 100, 0),
-      Ennemy.new('skeleton.png').set_position(400, 400, 0),
-      Ennemy.new('skeleton.png').set_position(50, 350, 0)
-    ]
+    @scale = 2
+    @hero = Hero.new.set_map_position(10, 8).set_velocity(0.6)
+    @ennemies = []
+    5.times do
+      x = (rand * 20).floor
+      y = (rand * 15).floor
+      @ennemies.push Ennemy.new('skeleton.png').set_map_position(x, y)
+    end
   end 
 
   def button_down(id)
@@ -44,17 +45,31 @@ class Window < Gosu::Window
     @hero.button_down(id)
   end
 
+  def button_up(id)
+    super
+    @hero.button_up(id)
+  end
+
   def needs_cursor?; true; end
 
   def update
     @hero.update(@ennemies)
     @ennemies.each {|ennemy| ennemy.set_velocity(0.25); ennemy.update(@hero)}
-    self.caption = @hero.position.inspect
+    self.caption = @hero.map_target.inspect
   end
 
   def draw
+    tile_size = 16
+    @tile ||= Gosu::render(tile_size, tile_size, retro: true) do
+      Gosu::draw_rect(0, 0, tile_size, tile_size, Gosu::Color.new(255, 64, 64, 64))
+      Gosu::draw_rect(1, 1, 15, 15, Gosu::Color.new(255, 128, 128, 128))
+    end
     scale(@scale, @scale) do
-      Gosu::draw_rect(0, 0, self.width, self.height, Gosu::Color.new(255, 128, 128, 128))
+      15.times do |y|
+        20.times do |x|
+          @tile.draw(x * tile_size, y * tile_size, 0)
+        end
+      end
       @hero.draw
       @ennemies.each {|ennemy| ennemy.draw}
     end
