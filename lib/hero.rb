@@ -89,6 +89,8 @@ class Hero < Character
         move(:west) 
       elsif Gosu::button_down?(@@keys[:right])
         move(:east) 
+      else
+        stop_movement
       end
     end
   end

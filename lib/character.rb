@@ -18,8 +18,8 @@ class Character
     south_west: 2
   }
   @@direction_default = :north
-  @@velocity = 1.5
-  @@run_multiplier = 1.8
+  @@velocity = 1
+  @@run_multiplier = 2
 
   attr_reader :position, :map_position, :map_target
   def initialize(spritesheet, sprite_width = nil, sprite_height = nil)
@@ -110,6 +110,13 @@ class Character
     move(:east)
   end
 
+  def stop_movement
+    if @map_target.nil?
+      @frame_tick = Gosu::milliseconds
+      @frame = @@frame_default
+    end
+  end
+
   def update
     velocity = @running ? @@run_multiplier * @velocity : @velocity 
 
@@ -150,9 +157,6 @@ class Character
         @frame = 0 if @frame >= @@frame_loop_order.size
         @frame_tick = Gosu::milliseconds
       end
-    else
-      @frame_tick = Gosu::milliseconds
-      @frame = @@frame_default
     end
   end
 
