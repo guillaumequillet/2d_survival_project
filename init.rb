@@ -29,7 +29,8 @@ require_relative './lib/weapon.rb'
 class Window < Gosu::Window
   def initialize
     super(640, 480, false)
-    @hero = Hero.new.set_position(self.width/2, self.height/2, 0)
+    @scale = 3
+    @hero = Hero.new.set_position((self.width / 2) / @scale, (self.height / 2) / @scale, 0)
     @ennemies = [
       Ennemy.new('skeleton.png').set_position(100, 100, 0),
       Ennemy.new('skeleton.png').set_position(400, 400, 0),
@@ -48,12 +49,15 @@ class Window < Gosu::Window
   def update
     @hero.update(@ennemies)
     @ennemies.each {|ennemy| ennemy.set_velocity(0.25); ennemy.update(@hero)}
+    self.caption = @hero.position.inspect
   end
 
   def draw
-    Gosu::draw_rect(0, 0, self.width, self.height, Gosu::Color.new(255, 128, 128, 128))
-    @hero.draw
-    @ennemies.each {|ennemy| ennemy.draw}
+    scale(@scale, @scale) do
+      Gosu::draw_rect(0, 0, self.width, self.height, Gosu::Color.new(255, 128, 128, 128))
+      @hero.draw
+      @ennemies.each {|ennemy| ennemy.draw}
+    end
   end
 end
 

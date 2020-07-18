@@ -27,7 +27,7 @@ class Ennemy < Character
 
   def draw
     super()
-    @font ||= Gosu::Font.new(24)
+    @font ||= Gosu::Font.new(12)
     @font.draw_text(@distance_from_hero, @position.x, @position.y + @font.height, 1)
   end
 end

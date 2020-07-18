@@ -98,8 +98,6 @@ class Hero < Character
   end
 
   def draw
-    scale = 4
-
     unless (@target.nil?)
       # we want to adjust the direction to face the target, if any
       angle = Gosu::angle(@position.x, @position.y, @target.position.x, @target.position.y)
@@ -117,16 +115,16 @@ class Hero < Character
     
     current_frame_index = @@directions[@direction] * @@frame_count + @@frame_loop_order[@frame] 
     sprites = @targeting ? @aiming_sprites : @frames   
-    sprites[current_frame_index].draw_rot(@position.x, @position.y, @position.z + @position.y, 0, 0.5, 1, scale, scale)
+    sprites[current_frame_index].draw_rot(@position.x, @position.y, @position.z + @position.y, 0, 0.5, 1)
 
     if @targeting
-      @font ||= Gosu::Font.new(24)
+      @font ||= Gosu::Font.new(12)
       @font.draw_text('targeting | angle : ' + angle.round(0).to_s, @position.x, @position.y + @font.height, 1)
       unless @target.nil?
-        src = Position.new(@position.x, @position.y - 48, @position.z)
-        src.x += 36 if @direction == :east
-        src.x -= 36 if @direction == :west
-        Gosu::draw_line(src.x, src.y, Gosu::Color::RED, @target.position.x, @target.position.y - 48, Gosu::Color::RED)
+        src = Position.new(@position.x, @position.y - 12, @position.z)
+        src.x += 8 if @direction == :east
+        src.x -= 8 if @direction == :west
+        Gosu::draw_line(src.x, src.y, Gosu::Color::RED, @target.position.x, @target.position.y - 16, Gosu::Color::RED)
       end
     end
   end
